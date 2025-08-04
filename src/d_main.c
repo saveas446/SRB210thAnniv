@@ -1157,6 +1157,28 @@ void D_SRB2Main(void)
 	}
 	adminpassword[8] = '\0';
 
+	// add any files specified on the command line with -file wadfile
+	// to the wad list
+	if (!(M_CheckParm("-connect")))
+	{
+		if (M_CheckParm("-file"))
+		{
+			// the parms after p are wadfile/lump names,
+			// until end of parms or another - preceded parm
+			while (M_IsNextParm())
+			{
+				char *s = M_GetNextParm();
+
+				if (s) // Check for NULL?
+				{
+					if (!W_VerifyNMUSlumps(s))
+						modifiedgame = true;
+					D_AddFile(s);
+				}
+			}
+		}
+	}
+	
 	// get skill / map from parms
 
 	if (M_CheckParm("-server") || dedicated)
